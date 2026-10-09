@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
@@ -98,10 +98,10 @@ test('login fails when a required field is missing or invalid', function (array 
             ],
         ]);
 })->with([
-            'empty email' => [['email' => '', 'password' => 'secret123'], 'email'],
-            'empty password' => [['email' => 'jake@jake.jake', 'password' => ''], 'password'],
-            'invalid email' => [['email' => 'not-an-email', 'password' => 'secret123'], 'email'],
-        ]);
+    'empty email' => [['email' => '', 'password' => 'secret123'], 'email'],
+    'empty password' => [['email' => 'jake@jake.jake', 'password' => ''], 'password'],
+    'invalid email' => [['email' => 'not-an-email', 'password' => 'secret123'], 'email'],
+]);
 
 test('login fails when the user key is missing from the request body', function () {
 

@@ -17,7 +17,7 @@ class ConvertTokenHeader
         $header = $request->header('Authorization', '');
 
         if (str_starts_with($header, 'Token ')) {
-            $request->headers->set('Authorization', 'Bearer ' . substr($header, 6));
+            $request->headers->set('Authorization', 'Bearer '.substr($header, 6));
         }
 
         return $next($request);
