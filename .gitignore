@@ -13,6 +13,7 @@
 /.vscode
 /.zed
 /.atl
+/odd
 /auth.json
 /public/storage
 /storage/*.key
