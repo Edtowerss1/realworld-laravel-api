@@ -11,8 +11,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-
-
 #[Fillable(['email', 'password', 'username', 'bio', 'image'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements JWTSubject
@@ -20,11 +18,10 @@ class User extends Authenticatable implements JWTSubject
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-
     /**
      * Define the default values for the model's attributes.
      *
-     * @var array<string, string>
+     * @var array<string, mixed>
      */
     protected $attributes = [
         'bio' => null,
