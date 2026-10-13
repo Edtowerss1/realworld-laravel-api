@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\Api\V1\LoginRequest;
+use App\Http\Requests\Api\V1\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -27,7 +28,7 @@ class AuthController extends Controller
             ]);
         }
 
-        return $this->userResponse($guard->user(), $token);
+        return $this->userResponse($guard->user(), $token)->setStatusCode(200);
     }
 
     public function current(Request $request): JsonResponse
@@ -46,5 +47,15 @@ class AuthController extends Controller
                 'image' => $user->image,
             ],
         ]);
+    }
+
+    public function register(RegisterRequest $request, JWTGuard $guard): JsonResponse
+    {
+        $user = User::create($request->only('username', 'email', 'password'));
+
+        $token = $guard->fromUser($user);
+
+        return $this->userResponse($user, $token)->setStatusCode(201);
+
     }
 }

@@ -10,7 +10,9 @@ Route::prefix('v1')->group(function (): void {
 
 // RealWorld spec routes (no version prefix: /api/users/login, /api/user)
 Route::post('/users/login', [AuthController::class, 'login'])->name('api.auth.login');
+Route::post('/users', [AuthController::class, 'register'])->name('api.auth.register');
 
 Route::middleware('auth:api')->group(function (): void {
     Route::get('/user', [AuthController::class, 'current'])->name('api.user.current');
+
 });
