@@ -14,5 +14,6 @@ Route::post('/users', [AuthController::class, 'register'])->name('api.auth.regis
 
 Route::middleware('auth:api')->group(function (): void {
     Route::get('/user', [AuthController::class, 'current'])->name('api.user.current');
+    Route::put('/user', [AuthController::class, 'update'])->name('api.user.update');
 
 });

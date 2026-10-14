@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\Api\V1\LoginRequest;
 use App\Http\Requests\Api\V1\RegisterRequest;
+use App\Http\Requests\Api\V1\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ class AuthController extends Controller
 
         // Same error for a non-existent email and a wrong password,
         // so we do not reveal which emails are registered
-        if (! $token) {
+        if (!$token) {
             throw ValidationException::withMessages([
                 'email' => ['is invalid'],
             ]);
@@ -57,5 +58,22 @@ class AuthController extends Controller
 
         return $this->userResponse($user, $token)->setStatusCode(201);
 
+    }
+
+    public function update(UpdateUserRequest $request, JWTGuard $guard): JsonResponse
+    {
+        $user = $request->user();
+
+        // Update the user with the validated data
+        $user->update($request->validated());
+
+        // If the password was updated, we need to generate a new token
+        if ($request->filled('password')) {
+            $token = $guard->fromUser($user);
+        } else {
+            $token = $request->bearerToken();
+        }
+
+        return $this->userResponse($user, $token)->setStatusCode(200);
     }
 }
