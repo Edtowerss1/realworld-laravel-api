@@ -53,4 +53,50 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    /**
+     * retrun the users that this user is following
+     *
+     */
+    public function following()
+    {
+        return $this->belongsToMany(User::class, 'followers', 'follower_id', 'following_id')
+            ->withTimestamps();
+    }
+
+    /**
+     * return the users that are following this user
+     *
+     */
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'followers', 'following_id', 'follower_id');
+    }
+
+    /**
+     * Check if the current user is following another user.
+     *
+     */
+    public function isFollowing(User $user): bool
+    {
+        return $this->following()->where('following_id', $user->id)->exists();
+    }
+
+    /**
+     * Follow another user.
+     *
+     */
+    public function follow(User $user): void
+    {
+        $this->following()->syncWithoutDetaching([$user->id]);
+    }
+
+    /**
+     * Unfollow another user.
+     *
+     */
+    public function unfollow(User $user): void
+    {
+        $this->following()->detach($user->id);
+    }
 }

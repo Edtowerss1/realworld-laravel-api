@@ -8,7 +8,7 @@ uses(RefreshDatabase::class);
 test('the authentication endpoint works correctly and returns 200 with user data and token', function () {
 
     // Create a user in the database
-    $user = User::factory()->create([
+    User::factory()->create([
         'email' => 'jake@jake.jake',
         'password' => bcrypt('jakejake'),
         'username' => 'Jacob',
