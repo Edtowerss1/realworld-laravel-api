@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CommentController;
 use App\Http\Controllers\Api\V1\HealthController;
 use App\Http\Controllers\Api\V1\ProfileController;
+use App\Http\Controllers\Api\V1\TagController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function (): void {
@@ -16,6 +17,7 @@ Route::post('/users/login', [AuthController::class, 'login'])->name('api.auth.lo
 Route::post('/users', [AuthController::class, 'register'])->name('api.auth.register');
 Route::get('/profiles/{username}', [ProfileController::class, 'show'])->name('api.profiles.show');
 Route::get('/articles', [ArticleController::class, 'index'])->name('api.articles.index');
+Route::get('/tags', [TagController::class, 'index'])->name('api.tags.index');
 
 // protected routes
 Route::middleware('auth:api')->group(function (): void {
