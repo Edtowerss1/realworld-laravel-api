@@ -14,7 +14,6 @@ use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
-
     public function index(Request $request): JsonResponse
     {
         // Iniciamos la consulta ordenando por los más recientes
@@ -153,7 +152,6 @@ class ArticleController extends Controller
         return $this->articleResponse($article);
     }
 
-
     private function formatArticle(Article $article, ?User $currentUser): array
     {
         $isFollowing = $currentUser ? $currentUser->isFollowing($article->author) : false;
@@ -184,7 +182,7 @@ class ArticleController extends Controller
     private function articleResponse(Article $article, int $status = 200): JsonResponse
     {
         return response()->json([
-            'article' => $this->formatArticle($article, auth('api')->user())
+            'article' => $this->formatArticle($article, auth('api')->user()),
         ], $status);
     }
 
@@ -197,8 +195,8 @@ class ArticleController extends Controller
 
         return response()->json([
             // Mapeamos la colección para formatear cada artículo
-            'articles' => $articles->map(fn($article) => $this->formatArticle($article, $currentUser)),
-            'articlesCount' => $count
+            'articles' => $articles->map(fn ($article) => $this->formatArticle($article, $currentUser)),
+            'articlesCount' => $count,
         ]);
     }
 }

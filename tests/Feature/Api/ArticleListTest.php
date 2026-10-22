@@ -16,9 +16,9 @@ test('can get global articles list with default pagination', function () {
     $response->assertStatus(200)
         ->assertJsonStructure([
             'articles' => [
-                '*' => ['slug', 'title', 'author']
+                '*' => ['slug', 'title', 'author'],
             ],
-            'articlesCount'
+            'articlesCount',
         ]);
 
     // RealWorld exige un límite por defecto de 20

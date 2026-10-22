@@ -7,6 +7,8 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -57,8 +59,9 @@ class User extends Authenticatable implements JWTSubject
     /**
      * return the users that this user is following
      *
+     * @return BelongsToMany<User, $this>
      */
-    public function following()
+    public function following(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'followers', 'follower_id', 'following_id')
             ->withTimestamps();
@@ -67,15 +70,15 @@ class User extends Authenticatable implements JWTSubject
     /**
      * return the users that are following this user
      *
+     * @return BelongsToMany<User, $this>
      */
-    public function followers()
+    public function followers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'followers', 'following_id', 'follower_id');
     }
 
     /**
      * Check if the current user is following another user.
-     *
      */
     public function isFollowing(User $user): bool
     {
@@ -84,7 +87,6 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Follow another user.
-     *
      */
     public function follow(User $user): void
     {
@@ -93,7 +95,6 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Unfollow another user.
-     *
      */
     public function unfollow(User $user): void
     {
@@ -102,16 +103,20 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Get the articles authored by the user.
+     *
+     * @return HasMany<Article, $this>
      */
-    public function articles()
+    public function articles(): HasMany
     {
         return $this->hasMany(Article::class);
     }
 
     /**
      * Get the articles favorited by the user.
+     *
+     * @return BelongsToMany<Article, $this>
      */
-    public function favorites()
+    public function favorites(): BelongsToMany
     {
         return $this->belongsToMany(Article::class, 'favorites')->withTimestamps();
     }

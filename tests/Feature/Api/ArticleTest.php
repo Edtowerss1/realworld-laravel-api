@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\User;
 use App\Models\Article;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -159,7 +159,7 @@ test('cannot update an article if user is not the author', function () {
     // attempt to update
     $response = $this->withHeader('Authorization', "Token {$token}")
         ->putJson('/api/articles/original-title', [
-            'article' => ['title' => 'Hacked Title']
+            'article' => ['title' => 'Hacked Title'],
         ]);
 
     // assert forbidden (403)

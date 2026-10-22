@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Api\V1;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateUserRequest extends FormRequest
@@ -14,7 +13,6 @@ class UpdateUserRequest extends FormRequest
     {
         return true;
     }
-
 
     /**
      * The payload comes wrapped in a "user" key, so we move its content
@@ -31,8 +29,8 @@ class UpdateUserRequest extends FormRequest
         $userId = $this->user()->id;
 
         return [
-            'username' => ['sometimes', 'string', 'unique:users,username,' . $userId],
-            'email' => ['sometimes', 'email', 'unique:users,email,' . $userId],
+            'username' => ['sometimes', 'string', 'unique:users,username,'.$userId],
+            'email' => ['sometimes', 'email', 'unique:users,email,'.$userId],
             'password' => ['sometimes', 'string'],
             'bio' => ['sometimes', 'nullable', 'string'],
             'image' => ['sometimes', 'nullable', 'url'],
@@ -43,12 +41,12 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'username.string' => "can't be empty",
-            'username.unique' => "has already been taken",
-            'email.email' => "is invalid",
-            'email.unique' => "has already been taken",
-            'password.string' => "is invalid",
-            'bio.string' => "is invalid",
-            'image.url' => "is invalid",
+            'username.unique' => 'has already been taken',
+            'email.email' => 'is invalid',
+            'email.unique' => 'has already been taken',
+            'password.string' => 'is invalid',
+            'bio.string' => 'is invalid',
+            'image.url' => 'is invalid',
         ];
     }
 }

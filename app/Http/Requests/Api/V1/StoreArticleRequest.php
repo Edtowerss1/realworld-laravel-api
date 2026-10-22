@@ -20,7 +20,6 @@ class StoreArticleRequest extends FormRequest
         $this->merge($this->input('article', []));
     }
 
-
     /**
      * Get the validation rules that apply to the request.
      *

@@ -15,7 +15,6 @@ class UpdateArticleRequest extends FormRequest
         return true;
     }
 
-
     public function prepareForValidation(): void
     {
         $this->merge($this->input('article', []));

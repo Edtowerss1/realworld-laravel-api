@@ -23,7 +23,7 @@ class AuthController extends Controller
 
         // Same error for a non-existent email and a wrong password,
         // so we do not reveal which emails are registered
-        if (!$token) {
+        if (! $token) {
             throw ValidationException::withMessages([
                 'email' => ['is invalid'],
             ]);
@@ -54,7 +54,7 @@ class AuthController extends Controller
     {
         $user = User::create($request->only('username', 'email', 'password'));
 
-        $token = $guard->fromUser($user);
+        $token = $guard->login($user);
 
         return $this->userResponse($user, $token)->setStatusCode(201);
 
@@ -69,7 +69,7 @@ class AuthController extends Controller
 
         // If the password was updated, we need to generate a new token
         if ($request->filled('password')) {
-            $token = $guard->fromUser($user);
+            $token = $guard->login($user);
         } else {
             $token = $request->bearerToken();
         }
