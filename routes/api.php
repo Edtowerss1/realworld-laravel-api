@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\ArticleController;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\CommentController;
 use App\Http\Controllers\Api\V1\HealthController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -30,8 +31,10 @@ Route::middleware('auth:api')->group(function (): void {
     Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])->name('api.articles.destroy');
     Route::post('/articles/{article}/favorite', [ArticleController::class, 'favorite'])->name('api.articles.favorite');
     Route::delete('/articles/{article}/favorite', [ArticleController::class, 'unfavorite'])->name('api.articles.unfavorite');
-
+    Route::post('/articles/{article}/comments', [CommentController::class, 'store'])->name('api.articles.comments.store');
+    Route::delete('/articles/{article}/comments/{comment}', [CommentController::class, 'destroy'])->name('api.articles.comments.destroy');
 });
 
 // public routes (to avoid route conflicts with protected routes)
+Route::get('/articles/{article}/comments', [CommentController::class, 'index'])->name('api.articles.comments.index');
 Route::get('/articles/{article}', [ArticleController::class, 'show'])->name('api.articles.show');

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['user_id', 'slug', 'title', 'description', 'body'])]
 class Article extends Model
@@ -63,5 +64,15 @@ class Article extends Model
         }
 
         return $this->favoritedBy()->where('user_id', $user->id)->exists();
+    }
+
+    /**
+     * Get the comments associated with the article.
+     *
+     * @return HasMany<Comment, $this>
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
     }
 }

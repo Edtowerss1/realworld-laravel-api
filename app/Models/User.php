@@ -120,4 +120,14 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsToMany(Article::class, 'favorites')->withTimestamps();
     }
+
+    /**
+     * Get the comments authored by the user.
+     *
+     * @return HasMany<Comment, $this>
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
 }
