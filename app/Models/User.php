@@ -55,7 +55,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * retrun the users that this user is following
+     * return the users that this user is following
      *
      */
     public function following()
@@ -98,5 +98,21 @@ class User extends Authenticatable implements JWTSubject
     public function unfollow(User $user): void
     {
         $this->following()->detach($user->id);
+    }
+
+    /**
+     * Get the articles authored by the user.
+     */
+    public function articles()
+    {
+        return $this->hasMany(Article::class);
+    }
+
+    /**
+     * Get the articles favorited by the user.
+     */
+    public function favorites()
+    {
+        return $this->belongsToMany(Article::class, 'favorites')->withTimestamps();
     }
 }
