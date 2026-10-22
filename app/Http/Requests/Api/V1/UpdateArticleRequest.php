@@ -28,9 +28,11 @@ class UpdateArticleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['sometimes', 'string'],
+            'title' => ['sometimes', 'string', 'min:1'],
             'description' => ['sometimes', 'string'],
             'body' => ['sometimes', 'string'],
+            'tagList' => ['sometimes', 'array'],
+            'tagList.*' => ['string'],
         ];
     }
 }

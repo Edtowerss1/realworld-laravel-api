@@ -181,8 +181,7 @@ test('can delete an article if authenticated user is the author', function () {
     $response = $this->withHeader('Authorization', "Token {$token}")
         ->deleteJson('/api/articles/to-be-deleted');
 
-    // assert 200 OK or 204 No Content (RealWorld uses 200 with an empty body or success message, often 204 is acceptable too)
-    $response->assertStatus(200);
+    $response->assertNoContent();
 
     // verify it is deleted from database
     $this->assertDatabaseMissing('articles', ['id' => $article->id]);

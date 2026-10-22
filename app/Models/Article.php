@@ -41,7 +41,9 @@ class Article extends Model
      */
     public function tags(): BelongsToMany
     {
-        return $this->belongsToMany(Tag::class, 'article_tag');
+        return $this->belongsToMany(Tag::class, 'article_tag')
+            ->withPivot('position')
+            ->orderBy('article_tag.position');
     }
 
     /**

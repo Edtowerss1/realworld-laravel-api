@@ -35,4 +35,13 @@ class StoreArticleRequest extends FormRequest
             'tagList.*' => ['string'], // Each tag in the tagList array should be a string
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'title.required' => "can't be blank",
+            'description.required' => "can't be blank",
+            'body.required' => "can't be blank",
+        ];
+    }
 }

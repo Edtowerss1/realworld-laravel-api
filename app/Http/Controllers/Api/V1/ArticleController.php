@@ -10,6 +10,8 @@ use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ArticleController extends Controller
@@ -77,17 +79,24 @@ class ArticleController extends Controller
         $user = $request->user();
 
         // 1. Crear el artículo
+        $slug = Str::slug($request->title);
+        $baseSlug = $slug;
+        $suffix = 1;
+        while (Article::where('slug', $slug)->exists()) {
+            $slug = $baseSlug.'-'.$suffix++;
+        }
+
         $article = $user->articles()->create([
             'title' => $request->title,
-            'slug' => Str::slug($request->title),
+            'slug' => $slug,
             'description' => $request->description,
             'body' => $request->body,
         ]);
 
         // 2. Sincronizar etiquetas si vienen en el request
         if ($request->has('tagList')) {
-            $tagIds = collect($request->tagList)->map(function ($tagName) {
-                return Tag::firstOrCreate(['name' => $tagName])->id;
+            $tagIds = collect($request->tagList)->mapWithKeys(function ($tagName, $position) {
+                return [Tag::firstOrCreate(['name' => $tagName])->id => ['position' => $position]];
             });
             $article->tags()->sync($tagIds);
         }
@@ -114,16 +123,46 @@ class ArticleController extends Controller
 
         $data = $request->only(['title', 'description', 'body']);
         if ($request->has('title')) {
-            $data['slug'] = Str::slug($request->title);
+            $slug = Str::slug($request->title);
+            $baseSlug = $slug;
+            $suffix = 1;
+            while (Article::where('slug', $slug)
+                ->whereKeyNot($article->getKey())
+                ->exists()) {
+                $slug = $baseSlug.'-'.$suffix++;
+            }
+            $data['slug'] = $slug;
         }
 
-        $article->update($data);
+        $updatedAt = now();
+        if ($article->updated_at
+            && $updatedAt->format('Y-m-d H:i:s') <= $article->updated_at->format('Y-m-d H:i:s')) {
+            $updatedAt = $article->updated_at->copy()->addSecond();
+        }
+        $data['updated_at'] = $updatedAt;
+
+        $article->fill($data);
+        $article->timestamps = false;
+        $article->save();
+        $article->timestamps = true;
+        DB::table('articles')
+            ->where('id', $article->getKey())
+            ->update(['updated_at' => $updatedAt->format('Y-m-d H:i:s')]);
+        $article->refresh();
+
+        if ($request->has('tagList')) {
+            $tagIds = collect($request->tagList)->mapWithKeys(function ($tagName, $position) {
+                return [Tag::firstOrCreate(['name' => $tagName])->id => ['position' => $position]];
+            });
+            $article->tags()->sync($tagIds);
+        }
+
         $article->load(['author', 'tags']);
 
         return $this->articleResponse($article);
     }
 
-    public function destroy(Article $article): JsonResponse
+    public function destroy(Article $article): Response
     {
         if (request()->user()->id !== $article->user_id) {
             abort(403, 'You are not authorized to delete this article.');
@@ -131,7 +170,7 @@ class ArticleController extends Controller
 
         $article->delete();
 
-        return response()->json(['message' => 'Article deleted successfully']);
+        return response()->noContent();
     }
 
     public function favorite(Request $request, Article $article): JsonResponse
@@ -152,15 +191,14 @@ class ArticleController extends Controller
         return $this->articleResponse($article);
     }
 
-    private function formatArticle(Article $article, ?User $currentUser): array
+    private function formatArticle(Article $article, ?User $currentUser, bool $includeBody = true): array
     {
         $isFollowing = $currentUser ? $currentUser->isFollowing($article->author) : false;
 
-        return [
+        $formatted = [
             'slug' => $article->slug,
             'title' => $article->title,
             'description' => $article->description,
-            'body' => $article->body,
             'tagList' => $article->tags->pluck('name'),
             'createdAt' => $article->created_at->toISOString(),
             'updatedAt' => $article->updated_at->toISOString(),
@@ -173,6 +211,12 @@ class ArticleController extends Controller
                 'following' => $isFollowing,
             ],
         ];
+
+        if ($includeBody) {
+            $formatted['body'] = $article->body;
+        }
+
+        return $formatted;
     }
 
     /**
@@ -195,7 +239,7 @@ class ArticleController extends Controller
 
         return response()->json([
             // Mapeamos la colección para formatear cada artículo
-            'articles' => $articles->map(fn ($article) => $this->formatArticle($article, $currentUser)),
+            'articles' => $articles->map(fn ($article) => $this->formatArticle($article, $currentUser, false)),
             'articlesCount' => $count,
         ]);
     }
