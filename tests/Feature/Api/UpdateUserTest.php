@@ -172,8 +172,8 @@ test('update fails when the email or username is already taken by another user',
     $response = $this->withHeader('Authorization', "Token {$token}")
         ->putJson('/api/user', $payload);
 
-    // assert that the response has a 422 status code and contains validation errors
-    $response->assertStatus(422)
+    // assert that the response has a 409 status code and contains validation errors
+    $response->assertStatus(409)
         ->assertJson([
             'errors' => [
                 'email' => ['has already been taken'],

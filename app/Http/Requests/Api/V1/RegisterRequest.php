@@ -34,16 +34,16 @@ class RegisterRequest extends FormRequest
     }
 
     /**
-     * Error messages in the RealWorld style ("can't be empty", "is invalid")
+    * Error messages in the RealWorld style ("can't be blank", "is invalid")
      */
     public function messages(): array
     {
         return [
-            'username.required' => "can't be empty",
+            'username.required' => "can't be blank",
             'username.string' => 'is invalid',
-            'email.required' => "can't be empty",
+            'email.required' => "can't be blank",
             'email.email' => 'is invalid',
-            'password.required' => "can't be empty",
+            'password.required' => "can't be blank",
             'password.string' => 'is invalid',
             'username.unique' => 'has already been taken',
             'email.unique' => 'has already been taken',

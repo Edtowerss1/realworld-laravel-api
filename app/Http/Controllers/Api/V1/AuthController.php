@@ -8,7 +8,6 @@ use App\Http\Requests\Api\V1\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\JWTGuard;
 
 class AuthController extends Controller
@@ -24,9 +23,7 @@ class AuthController extends Controller
         // Same error for a non-existent email and a wrong password,
         // so we do not reveal which emails are registered
         if (! $token) {
-            throw ValidationException::withMessages([
-                'email' => ['is invalid'],
-            ]);
+            return response()->json(['errors' => ['credentials' => ['invalid']]], 401);
         }
 
         return $this->userResponse($guard->user(), $token)->setStatusCode(200);

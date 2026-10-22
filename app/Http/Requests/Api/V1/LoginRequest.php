@@ -30,14 +30,14 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Error messages in the RealWorld style ("can't be empty", "is invalid")
+    * Error messages in the RealWorld style ("can't be blank", "is invalid")
      */
     public function messages(): array
     {
         return [
-            'email.required' => "can't be empty",
+            'email.required' => "can't be blank",
             'email.email' => 'is invalid',
-            'password.required' => "can't be empty",
+            'password.required' => "can't be blank",
             'password.string' => 'is invalid',
         ];
     }

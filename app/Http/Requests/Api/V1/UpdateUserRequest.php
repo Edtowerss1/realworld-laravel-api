@@ -31,7 +31,7 @@ class UpdateUserRequest extends FormRequest
         return [
             'username' => ['sometimes', 'string', 'unique:users,username,'.$userId],
             'email' => ['sometimes', 'email', 'unique:users,email,'.$userId],
-            'password' => ['sometimes', 'string'],
+            'password' => ['sometimes', 'string', 'min:8'],
             'bio' => ['sometimes', 'nullable', 'string'],
             'image' => ['sometimes', 'nullable', 'url'],
         ];
@@ -45,6 +45,7 @@ class UpdateUserRequest extends FormRequest
             'email.email' => 'is invalid',
             'email.unique' => 'has already been taken',
             'password.string' => 'is invalid',
+            'password.min' => 'is invalid',
             'bio.string' => 'is invalid',
             'image.url' => 'is invalid',
         ];

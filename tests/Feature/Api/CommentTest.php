@@ -61,6 +61,6 @@ test('can delete own comment from an article', function () {
     $response = $this->withHeader('Authorization', "Token {$token}")
         ->deleteJson("/api/articles/{$article->slug}/comments/{$comment->id}");
 
-    $response->assertStatus(200);
+    $response->assertNoContent();
     $this->assertDatabaseMissing('comments', ['id' => $comment->id]);
 });

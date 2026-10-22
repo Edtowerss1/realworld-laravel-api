@@ -89,7 +89,7 @@ test('register fails when the email is already taken', function () {
             'email' => 'jake@jake.jake',
             'password' => 'jakejake',
         ],
-    ])->assertStatus(422)->assertJsonValidationErrors('email');
+    ])->assertStatus(409)->assertJsonValidationErrors('email');
 });
 
 test('register fails when the username is already taken', function () {
@@ -101,7 +101,7 @@ test('register fails when the username is already taken', function () {
             'email' => 'new@jake.jake',
             'password' => 'jakejake',
         ],
-    ])->assertStatus(422)->assertJsonValidationErrors('username');
+    ])->assertStatus(409)->assertJsonValidationErrors('username');
 });
 
 test('register fails when the user key is missing from the request body', function () {
@@ -115,9 +115,9 @@ test('register validation messages follow the RealWorld format', function () {
         'user' => ['username' => '', 'email' => '', 'password' => ''],
     ])->assertStatus(422)->assertJson([
         'errors' => [
-            'username' => ["can't be empty"],
-            'email' => ["can't be empty"],
-            'password' => ["can't be empty"],
+            'username' => ["can't be blank"],
+            'email' => ["can't be blank"],
+            'password' => ["can't be blank"],
         ],
     ]);
 });

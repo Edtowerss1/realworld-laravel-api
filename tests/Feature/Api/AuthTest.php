@@ -137,11 +137,11 @@ test('login fails with invalid credentials', function () {
     // send a POST request to the login endpoint
     $response = $this->postJson('/api/users/login', $payload);
 
-    // assert that the response has a 422 status code and contains an error message
-    $response->assertStatus(422)
+    // assert that the response has a 401 status code and contains an error message
+    $response->assertStatus(401)
         ->assertJson([
             'errors' => [
-                'email' => ['is invalid'],
+                'credentials' => ['invalid'],
             ],
         ]);
 });
@@ -159,11 +159,11 @@ test('login fails with a non-existent email', function () {
     // send a POST request to the login endpoint
     $response = $this->postJson('/api/users/login', $payload);
 
-    // assert that the response has a 422 status code and the same error as invalid credentials
-    $response->assertStatus(422)
+    // assert that the response has a 401 status code and the same error as invalid credentials
+    $response->assertStatus(401)
         ->assertJson([
             'errors' => [
-                'email' => ['is invalid'],
+                'credentials' => ['invalid'],
             ],
         ]);
 });
