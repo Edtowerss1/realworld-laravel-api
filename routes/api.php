@@ -3,14 +3,9 @@
 use App\Http\Controllers\Api\V1\ArticleController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CommentController;
-use App\Http\Controllers\Api\V1\HealthController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\TagController;
 use Illuminate\Support\Facades\Route;
-
-Route::prefix('v1')->group(function (): void {
-    Route::get('/health', HealthController::class)->name('api.v1.health');
-});
 
 // public routes
 Route::post('/users/login', [AuthController::class, 'login'])->name('api.auth.login');

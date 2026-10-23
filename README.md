@@ -66,7 +66,6 @@ Request bodies follow the RealWorld format: user data is wrapped in `user`, arti
 | Method | URI | Description |
 | --- | --- | --- |
 | GET | `/up` | Laravel health check |
-| GET | `/api/v1/health` | API health check |
 | POST | `/api/users` | Register a user |
 | POST | `/api/users/login` | Log in and receive a JWT |
 | GET | `/api/user` | Get the current user (authenticated) |
